@@ -2,7 +2,9 @@
 
 Connect bot to rpc wallet -> specify faucet wallet -> input destination wallet
 
-made by joe_land1
+Made by joe_land1
+
+*Note: This does not use any db's but instead .txt files, it should work on a pi
 
 ## Contact me:
  

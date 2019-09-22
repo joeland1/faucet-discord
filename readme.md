@@ -10,6 +10,7 @@ Contact me:
   discord - joe_land1 <@259837465299255296>
 
 Donations:
+
   Sugar: sugar1q4v54slhzzzkhtvtsq6pttlwufft8m5js8a2wtf
   
   BTC: 1Ejgoagvjc7Wzg4nMAF2oeoKeDxDjv4wic

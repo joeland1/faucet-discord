@@ -10,8 +10,8 @@ Made by joe_land1
  
     email - joe_land1@protonmail.com
 
-    discord - joe_land1 @joe_land1
-
+    discord - joe_land1 <@259837465299255296>
+    
 ## Donations:
 
     Sugar: sugar1q4v54slhzzzkhtvtsq6pttlwufft8m5js8a2wtf

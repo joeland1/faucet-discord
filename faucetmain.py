@@ -44,12 +44,15 @@ async def on_message(message):
             toaddress = message.content.split(" ")[1]
 
             #validate address function
+            validatestatus=wallet.validateaddress(toaddress)
 
-            txid = wallet.sendfrom(config.FAUCET_SOURCE,toaddress, config.AMOUNT)
-
-            if len(txid) == 64:
-                await sendmessage(message, txid)
+            if validatestatus["isvalid"]==True:
+                txid = wallet.sendfrom(config.FAUCET_SOURCE,toaddress, config.AMOUNT)
+                if len(txid) == 64:
+                    await sendmessage(message, txid)
                 #await message.channel.send("sent")
+            else:
+                await message.channel.send("invalid")
 
 
         #if person has use faucet before
@@ -71,19 +74,23 @@ async def on_message(message):
             if time.time()-float(contents)>=86400:
                                 #validate address function
                 toaddress = message.content.split(" ")[1]
+                validatestatus=wallet.validateaddress(toaddress)
 
-                txid = wallet.sendfrom(config.FAUCET_SOURCE,toaddress, config.AMOUNT)
+                if  validatestatus['isvalid']==True:
+                    txid = wallet.sendfrom(config.FAUCET_SOURCE,toaddress, config.AMOUNT)
 
-                #rewrite file if time diff is greater than 1 day
-                os.remove(str(message.author.id)+".txt")
-                f=open(str(message.author.id)+".txt", "+a")
-                f.write(str(time.time()))
-                f.close()
+                    #rewrite file if time diff is greater than 1 day
+                    os.remove(str(message.author.id)+".txt")
+                    f=open(str(message.author.id)+".txt", "+a")
+                    f.write(str(time.time()))
+                    f.close()
 
+                    if len(txid) == 64:
+                        #await message.channel.send("sent")
+                        await sendmessage(message, txid)
 
-                if len(txid) == 64:
-                    #await message.channel.send("sent")
-                    await sendmessage(txid, txid)
+                else:
+                    await message.channel.send("invalid")
 
             else:
                 await message.channel.send("Too soon, you gotta wait a bit more")

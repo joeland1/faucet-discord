@@ -25,7 +25,7 @@ async def on_message(message):
 
     wallet = AuthServiceProxy(rpc_connection)
 
-    if message.content.startswith('//faucet'):
+    if message.content.startswith('//faucet')&&message.channel.id==config.FAUCET_CHANNEL:
 
     #test to see if person has ever used faucet
         if os.path.isfile(str(message.author.id)+'.txt')==False:

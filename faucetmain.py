@@ -31,12 +31,6 @@ async def on_message(message):
         if os.path.isfile(str(message.author.id)+'.txt')==False:
             f= open(str(message.author.id)+".txt","w+")
 
-
-            print(message.created_at.timestamp())
-            print("message:current")
-            print(time.time())
-            print('------')
-
             f.write(str(time.time()))
             f.close
 
@@ -66,11 +60,6 @@ async def on_message(message):
                     except:
                         raise
 
-            print(time.time())
-            print("current :minus: past")
-            print(contents)
-            print('------')
-
             if time.time()-float(contents)>=86400:
                                 #validate address function
                 toaddress = message.content.split(" ")[1]
@@ -93,9 +82,14 @@ async def on_message(message):
                     await message.channel.send("invalid")
 
             else:
-                await message.channel.send("Too soon, you gotta wait a bit more")
-                print("diff is "+str(time.time()-float(contents)))
-                return
+                toaddress = message.content.split(" ")[1]
+                validatestatus=wallet.validateaddress(toaddress)
+                if  validatestatus['isvalid']==True:
+                    await message.channel.send("Too soon, you gotta wait until 24 horus have passed")
+                    print("diff is "+str(time.time()-float(contents)))
+                    return
+                else:
+                    await message.channel.send("invalid")
 
 
 @client.event

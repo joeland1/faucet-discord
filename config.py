@@ -1,13 +1,13 @@
 rpc_user = 'user'
 rpc_password ='password'
 ip = '127.0.0.1'
-rpc_port = '34230'
+rpc_port = '34229'
 
-AMOUNT=5.0
+AMOUNT=0.5
 CONFIRM = 6
 FEE = 0.001 # withdraw Fee
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 FAUCET_SOURCE = "General"
-FAUCET_CHANNEL = 625375552278364171
+CHANNEL = 625463810311847985
 TOKEN = ''
 OWNER_ID = 259837465299255296

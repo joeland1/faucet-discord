@@ -21,7 +21,9 @@ Made by joe_land1
     ETH: 0x0064FB08dE4cE640b57EffCd51E774643f5Bd654
 
   ## Dependencies:
-  
+
     discord.py
-    
+
     python-bitcoinrpc
+
+    captcha

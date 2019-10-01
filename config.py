@@ -3,7 +3,7 @@ rpc_password ='password'
 ip = '127.0.0.1'
 rpc_port = '34229'
 
-AMOUNT=5.0
+AMOUNT=0.5
 TIME = 3600 #amount of seconds
 VERSION = "1.0.1"
 FAUCET_SOURCE = "General"

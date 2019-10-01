@@ -3,11 +3,12 @@ rpc_password ='password'
 ip = '127.0.0.1'
 rpc_port = '34229'
 
-AMOUNT=0.5
-CONFIRM = 6
-FEE = 0.001 # withdraw Fee
+AMOUNT=5.0
+TIME = 3600 #amount of seconds
 VERSION = "1.0.1"
 FAUCET_SOURCE = "General"
-CHANNEL = 625463810311847985
 TOKEN = ''
+CAPTCHALENGTH = 5
 OWNER_ID = 259837465299255296
+PREFIX = '//'
+CHANNEL = 628095054136999938

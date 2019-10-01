@@ -56,7 +56,7 @@ async def on_message(message):
                 if captcha_answer==user_reply:
                     await faucetsend(message, wallet, address)
                 else:
-                    await message.author.send("incorrec, please request another captcha in the server")
+                    await message.author.send("incorrect, please request another captcha in the server")
 
                 os.remove("faucet_usr/"+str(message.author.id)+"_captcha_image.png")
                 os.remove("faucet_usr/"+str(message.author.id)+"_captcha_timestamp.txt")

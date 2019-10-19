@@ -72,19 +72,50 @@ async def on_message(message):
                 os.remove("faucet_usr/"+str(message.author.id)+"_addres.txt")
 
     else:
-        if message.channel.id == config.CHANNEL:
-            if message.content==prefix+"help":
+        faucet_channel_location = 'faucet_channel/'+str(message.guild.id)+'.txt'
+
+        if message.author.guild_permissions.administrator==True:
+            if message.content.startswith(prefix+"set_channel"):
+                command = message.content.replace(prefix+"set_channel", "").replace(" ","")
+                f=open(faucet_channel_location, "w")
+                f.write(command.replace("<#","").replace(">",""))
+                f.close()
+                print("changed")
+                return
+        print("not admin")
+
+        if message.content.startswith(config.PREFIX) and os.path.isfile(faucet_channel_location) == False:
+            await message.channel.send("Please have an admin set up the bot\n`!DOGEC set_channel #channel_mention`")
+            print("settup")
+            return
+
+        if os.path.isfile(faucet_channel_location) == False:
+            print("settup 2")
+            return
+
+        channel=0
+        with open(faucet_channel_location, 'r') as f:
+            for line in f:
+                try:
+                    channel = int(line)
+                except:
+                    raise
+
+        print(channel)
+
+        if message.channel.id == channel:
+            if message.content==config.PREFIX+"help":
                 await helpmenue(message)
 
             if message.content.startswith(prefix+'faucet'):
-
-                toaddress = message.content.split(" ")[1]
+                toaddress = message.content.replace(config.PREFIX+'faucet ', "")
+                print(toaddress)
                 validatestatus=wallet.validateaddress(toaddress)
 
                 if validatestatus["isvalid"]==True:
 
                     #create captcha stuffs
-                    letters = "0123456789abcdefghijklmnopqrstuvwxyz+@"
+                    letters = "0123456789abcdefghijklmnopqrstuvwxyz?!()@"
                     captcha_answer=''.join(random.choice(letters) for i in range(config.CAPTCHALENGTH))
 
                     image_captcha = ImageCaptcha()
@@ -113,8 +144,9 @@ async def on_message(message):
                     print(captcha_answer)
 
                 else:
-                    x = client.get_channel(config.CHANNEL)
+                    x = client.get_channel(channel)
                     await x.send("invalid address")
+                    return
 
 
 
@@ -131,16 +163,18 @@ async def sendmessage(ctx, txid):
     address= f.read()
     f.close()
 
+    #https://explorer.dogec.io/#/tx/fc961db59ef5bdfcb032de2334b6dc748e6d97717355c0e817dbdb2ea433c8ef
+
     embed = discord.Embed(
         title="**Block explorer**",
-        url='https://1explorer.sugarchain.org/tx/{0}'.format(txid), color=0x0043ff)
+        url='https://explorer.dogec.io/#/tx/{0}'.format(txid), color=0x0043ff)
     embed.add_field(
         value="Amount sent: "+str(config.AMOUNT),
         name=address)
 
-    x = client.get_channel(config.CHANNEL)
+    #x = client.get_channel(config.CHANNEL)
 
-    await x.send(embed=embed)
+    await ctx.author.send(embed=embed)
     print("reward sent")
 
 async def faucetsend(message, wallet, toaddress):
@@ -150,10 +184,11 @@ async def faucetsend(message, wallet, toaddress):
         f=open(authoridfile,"+w")
         f.write(str(time.time()))
         f.close
-
+        wallet.walletpassphrase("6]6bCXGnvMVN", 60)
         txid = wallet.sendfrom(config.FAUCET_SOURCE,toaddress, config.AMOUNT)
         if len(txid) == 64:
             await sendmessage(message, txid)
+        wallet.walletlock()
 
     #if person has use faucet before
     else:
@@ -176,7 +211,6 @@ async def faucetsend(message, wallet, toaddress):
             if len(txid) == 64:
                 await sendmessage(message, txid)
 
-        #if the time is smaller than the specified amount of seconds
         else:
             await message.channel.send("You must wait "+str(int((config.TIME-(time.time()-float(contents)))/60))+" minutes before you can use the faucet again.")
 
@@ -184,7 +218,7 @@ async def helpmenue(message):
 
     x = client.get_channel(config.CHANNEL)
 
-    embed=discord.Embed(title="Sugarchain Faucet", color=0x0000ff)
+    embed=discord.Embed(title="Faucet", color=0x0000ff)
     embed.add_field(name="How to use me", value="Type in `"+config.PREFIX+"faucet [coin address]`\nThen solve the captcha in DM\nIf the faucet was successful, it will display a link to the transaction")
     embed.add_field(name="Creator", value="<@"+str(config.OWNER_ID)+">")
     #embed.add_field(name="Donations:", value="BTC - 1Ejgoagvjc7Wzg4nMAF2oeoKeDxDjv4wic\nBCH - qz89j3xxq34tud50sgksmewddr7dum3njvlpd85cxc\nSugar - sugar1q4v54slhzzzkhtvtsq6pttlwufft8m5js8a2wtf" , inline=False)

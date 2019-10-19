@@ -115,7 +115,7 @@ async def on_message(message):
                 if validatestatus["isvalid"]==True:
 
                     #create captcha stuffs
-                    letters = "0123456789abcdefghijklmnopqrstuvwxyz?!()@"
+                    letters = "0123456789abcdefghijklmnopqrstuvwxyz?!+" 
                     captcha_answer=''.join(random.choice(letters) for i in range(config.CAPTCHALENGTH))
 
                     image_captcha = ImageCaptcha()

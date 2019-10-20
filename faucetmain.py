@@ -107,8 +107,8 @@ async def on_message(message):
             if message.content==config.PREFIX+"help":
                 await helpmenue(message)
 
-            if message.content.startswith(prefix+'faucet'):
-                toaddress = message.content.replace(config.PREFIX+'faucet ', "")
+            if message.content.startswith(prefix):
+                toaddress = message.content.replace(config.PREFIX, "")
                 print(toaddress)
                 validatestatus=wallet.validateaddress(toaddress)
 

@@ -87,11 +87,11 @@ async def on_message(message):
 
         if message.content.startswith(config.PREFIX) and os.path.isfile(faucet_channel_location) == False:
             await message.channel.send("Please have an admin set up the bot\n`!DOGEC set_channel #channel_mention`")
-            print("settup")
+            print("setup")
             return
 
         if os.path.isfile(faucet_channel_location) == False:
-            print("settup 2")
+            print("setup 2")
             return
 
         channel=0

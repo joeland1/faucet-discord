@@ -102,7 +102,6 @@ async def on_message(message):
                 except:
                     raise
 
-        print(channel)
 
         if message.channel.id == channel:
             if message.content==config.PREFIX+"help":

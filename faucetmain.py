@@ -80,15 +80,14 @@ async def on_message(message):
                 f=open(faucet_channel_location, "w")
                 f.write(command.replace("<#","").replace(">",""))
                 f.close()
+                await message.channel.send("You are not admin, please let an admin set the bot up")
                 print("changed")
                 return
         if message.author.guild_permissions.administrator==False
-            print("not admin")
-
-        if message.content.startswith(config.PREFIX) and os.path.isfile(faucet_channel_location) == False:
-            await message.channel.send("Please have an admin set up the bot\n`!DOGEC set_channel #channel_mention`")
-            print("setup")
-            return
+            if message.content.startswith(config.PREFIX+"set_channel"):
+                await message.channel.send("You are not admin. Please let an admin set the bot up")
+                print("not admin")
+                return
 
         if os.path.isfile(faucet_channel_location) == False:
             print("setup 2")
@@ -155,6 +154,7 @@ async def on_ready():
     print('Logged in as')
     print(client.user.name)
     print(client.user.id)
+    await client.change_presence(activity=discord.Game(prefix+" [dogecash address]"))
     print('------')
 
 async def sendmessage(ctx, txid):

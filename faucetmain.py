@@ -154,7 +154,7 @@ async def on_ready():
     print('Logged in as')
     print(client.user.name)
     print(client.user.id)
-    await client.change_presence(activity=discord.Game(prefix+" [dogecash address]"))
+    await client.change_presence(activity=discord.Game(prefix+" [address]"))
     print('------')
 
 async def sendmessage(ctx, txid):

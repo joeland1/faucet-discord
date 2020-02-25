@@ -10,15 +10,15 @@ Made by joe_land1
 
     email - joe_land1@protonmail.com
 
-    discord - joe_land1 <@259837465299255296>
+    discord - joe_land1 <@[]>
 
 ## Donations:
 
     Sugar: sugar1q4v54slhzzzkhtvtsq6pttlwufft8m5js8a2wtf
 
-    BTC: 1Ejgoagvjc7Wzg4nMAF2oeoKeDxDjv4wic
+    BTC: []
 
-    ETH: 0x0064FB08dE4cE640b57EffCd51E774643f5Bd654
+    ETH: []
 
   ## Dependencies:
 

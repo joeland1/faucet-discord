@@ -83,7 +83,7 @@ async def on_message(message):
                 await message.channel.send("You are not admin, please let an admin set the bot up")
                 print("changed")
                 return
-        if message.author.guild_permissions.administrator==False
+        if message.author.guild_permissions.administrator==False:
             if message.content.startswith(config.PREFIX+"set_channel"):
                 await message.channel.send("You are not admin. Please let an admin set the bot up")
                 print("not admin")

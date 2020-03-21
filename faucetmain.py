@@ -9,6 +9,7 @@ import time
 
 import random
 from captcha.image import ImageCaptcha
+from discord.ext import tasks
 
 import config
 
@@ -77,20 +78,21 @@ async def on_message(message):
         if message.author.guild_permissions.administrator==True:
             if message.content.startswith(prefix+"set_channel"):
                 command = message.content.replace(prefix+"set_channel", "").replace(" ","")
-                f=open(faucet_channel_location, "w")
+                f=open(faucet_channel_location, "+w")
                 f.write(command.replace("<#","").replace(">",""))
                 f.close()
-                await message.channel.send("You are not admin, please let an admin set the bot up")
                 print("changed")
                 return
-        if message.author.guild_permissions.administrator==False:
-            if message.content.startswith(config.PREFIX+"set_channel"):
-                await message.channel.send("You are not admin. Please let an admin set the bot up")
-                print("not admin")
-                return
+        else:
+            print("not admin")
+
+        if message.content.startswith(config.PREFIX) and os.path.isfile(faucet_channel_location) == False:
+            await message.channel.send("Please have an admin set up the bot\n`"+config.PREFIX+" set_channel #channel_mention`")
+            print("settup error 1")
+            return
 
         if os.path.isfile(faucet_channel_location) == False:
-            print("setup 2")
+            print("settup error 2")
             return
 
         channel=0
@@ -101,9 +103,9 @@ async def on_message(message):
                 except:
                     raise
 
-
         if message.channel.id == channel:
             if message.content==config.PREFIX+"help":
+                print("launching help menue")
                 await helpmenue(message)
 
             if message.content.startswith(prefix):
@@ -114,7 +116,7 @@ async def on_message(message):
                 if validatestatus["isvalid"]==True:
 
                     #create captcha stuffs
-                    letters = "0123456789abcdefghijklmnopqrstuvwxyz?!+" 
+                    letters = "0123456789abcdefghijklmnopqrstuvwxyz?!()@"
                     captcha_answer=''.join(random.choice(letters) for i in range(config.CAPTCHALENGTH))
 
                     image_captcha = ImageCaptcha()
@@ -147,6 +149,9 @@ async def on_message(message):
                     await x.send("invalid address")
                     return
 
+            if message.content==config.PREFIX+"drip":
+                #send a gif of beer faucet
+                await message.channel.send(file=discord.File("giphy.gif"))
 
 
 @client.event
@@ -154,8 +159,8 @@ async def on_ready():
     print('Logged in as')
     print(client.user.name)
     print(client.user.id)
-    await client.change_presence(activity=discord.Game(prefix+" [address]"))
     print('------')
+    sendbalanceupdate.start(client)
 
 async def sendmessage(ctx, txid):
 
@@ -184,11 +189,9 @@ async def faucetsend(message, wallet, toaddress):
         f=open(authoridfile,"+w")
         f.write(str(time.time()))
         f.close
-        wallet.walletpassphrase("", 60)
         txid = wallet.sendfrom(config.FAUCET_SOURCE,toaddress, config.AMOUNT)
         if len(txid) == 64:
             await sendmessage(message, txid)
-        wallet.walletlock()
 
     #if person has use faucet before
     else:
@@ -214,15 +217,22 @@ async def faucetsend(message, wallet, toaddress):
         else:
             await message.channel.send("You must wait "+str(int((config.TIME-(time.time()-float(contents)))/60))+" minutes before you can use the faucet again.")
 
+#doesnt work yet, need to fix
 async def helpmenue(message):
 
-    x = client.get_channel(config.CHANNEL)
+    x = client.get_channel(message.channel.id)
 
     embed=discord.Embed(title="Faucet", color=0x0000ff)
     embed.add_field(name="How to use me", value="Type in `"+config.PREFIX+"faucet [coin address]`\nThen solve the captcha in DM\nIf the faucet was successful, it will display a link to the transaction")
     embed.add_field(name="Creator", value="<@"+str(config.OWNER_ID)+">")
+    embed.add_field(name="Address", value="D7uEXrXJnZkTJZjn6eHDY9F1GLRcz6VomP")
     #embed.add_field(name="Donations:", value="BTC - 1Ejgoagvjc7Wzg4nMAF2oeoKeDxDjv4wic\nBCH - qz89j3xxq34tud50sgksmewddr7dum3njvlpd85cxc\nSugar - sugar1q4v54slhzzzkhtvtsq6pttlwufft8m5js8a2wtf" , inline=False)
 
     await x.send(embed=embed)
+
+@tasks.loop(seconds=360.0)
+async def sendbalanceupdate(discordclient):
+    x = discordclient.get_user(config.OWNER_ID)
+    await x.send("Balance="+str(AuthServiceProxy(rpc_connection).getbalance()))
 
 client.run(config.TOKEN)

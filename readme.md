@@ -16,9 +16,7 @@ Made by joe_land1
 
     Sugar: sugar1q4v54slhzzzkhtvtsq6pttlwufft8m5js8a2wtf
 
-    BTC: []
 
-    ETH: []
 
   ## Dependencies:
 
